@@ -78,8 +78,16 @@ a {
 
 .say {
 	margin-left: 5px;
+	font-size: large;
+	font-family:'viana';
+
+	@font-face {
+		font-family: 'viana';
+		src:url("Viana.ttf")；
+	}
 }
 
 .space {
 	margin-right: 150px;
+
 }

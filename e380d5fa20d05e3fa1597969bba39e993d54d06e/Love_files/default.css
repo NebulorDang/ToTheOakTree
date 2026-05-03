@@ -1,7 +1,7 @@
 body {
 	margin: 0;
 	padding: 0;
-	background: #ffc0cb;
+	background: #e4efe0;
 	font-size: 20px;
 	font-family: '微软雅黑', '宋体', sans-serif;
 	color: #000000;
@@ -23,14 +23,143 @@ a {
 	width: 1100px;
 	height: 680px;
 	margin-top: 10px;
+	overflow: hidden;
 }
 
 #text {
-	width: 400px;
-	height: 425px;
-	left: 60px;
-	top: 80px;
+	width: 380px;
+	height: 600px;
+	left: 40px;
+	top: 40px;
 	position: absolute;
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 15px 20px;
+	z-index: 10;
+	background: #fefcf3;
+	background-image: repeating-linear-gradient(
+		transparent,
+		transparent 25px,
+		rgba(200, 180, 160, 0.3) 25px,
+		rgba(200, 180, 160, 0.3) 26px
+	);
+	border: 2px solid rgba(180, 140, 100, 0.4);
+	border-radius: 2px;
+	box-shadow: 2px 3px 12px rgba(0, 0, 0, 0.15);
+	transform: rotate(-1deg);
+}
+
+#text::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 45px;
+	width: 2px;
+	height: 100%;
+	background: rgba(220, 80, 80, 0.2);
+}
+
+#text::-webkit-scrollbar {
+	width: 4px;
+}
+
+#text::-webkit-scrollbar-thumb {
+	background: rgba(190, 26, 37, 0.25);
+	border-radius: 2px;
+}
+
+/* 信纸翻开动画 - 3D翻页效果 */
+
+.letter-cover {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 20;
+	transform-style: preserve-3d;
+	transform-origin: left center;
+	cursor: default;
+	perspective: 1500px;
+}
+
+.letter-cover.flipped {
+	animation: letter-flip 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes letter-flip {
+	0% {
+		transform: rotateY(0deg) translateZ(0px);
+	}
+	15% {
+		transform: rotateY(-10deg) translateZ(20px);
+	}
+	40% {
+		transform: rotateY(-90deg) translateZ(40px);
+	}
+	70% {
+		transform: rotateY(-165deg) translateZ(15px);
+	}
+	85% {
+		transform: rotateY(-175deg) translateZ(5px);
+	}
+	100% {
+		transform: rotateY(-180deg) translateZ(0px);
+	}
+}
+
+.letter-cover .cover-front,
+.letter-cover .cover-back {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	backface-visibility: hidden;
+	border-radius: 2px;
+}
+
+.letter-cover .cover-front {
+	background: linear-gradient(135deg, #f5ddd5, #edd5cc);
+	border: 2px solid rgba(180, 140, 120, 0.35);
+	box-shadow: 2px 3px 12px rgba(0, 0, 0, 0.15);
+}
+
+.letter-cover .cover-front::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 45px;
+	width: 2px;
+	height: 100%;
+	background: rgba(220, 80, 80, 0.2);
+}
+
+.letter-cover .cover-back {
+	background: linear-gradient(to right, #e5c9bf, #edd5cc);
+	border: 2px solid rgba(180, 140, 120, 0.3);
+	box-shadow: inset 3px 0 10px rgba(0, 0, 0, 0.1);
+	transform: rotateY(180deg);
+}
+
+.letter-cover.flipped .cover-front {
+	animation: cover-shadow 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+@keyframes cover-shadow {
+	0% { box-shadow: 2px 3px 12px rgba(0, 0, 0, 0.15); }
+	40% { box-shadow: 12px 15px 35px rgba(0, 0, 0, 0.35); }
+	100% { box-shadow: -2px 3px 8px rgba(0, 0, 0, 0.1); }
+}
+
+/* 翻开后去掉装订线 */
+#text.letter-opened::before {
+	opacity: 0;
+	transition: opacity 0.3s;
+}
+
+#text.letter-opened {
+	transform: rotate(-1deg);
 }
 
 #code {
@@ -40,27 +169,34 @@ a {
 
 #clock-box {
 	position: absolute;
-	left: 60px;
-	top: 550px;
-	font-size: 28px;
+	right: 140px;
+	bottom: 25px;
+	font-size: 18px;
 	display: none;
+	text-align: center;
+	color: #fff;
+	font-family: 'ZCOOL KuaiLe', cursive;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 #clock-box a {
-	font-size: 28px;
+	font-size: 18px;
 	text-decoration: none;
+	color: #fff;
 }
 
 #clock {
-	margin-left: 48px;
+	margin-top: 5px;
 }
 
 #clock .digit {
-	font-size: 64px;
+	font-size: 30px;
 }
 
 #canvas {
-	margin: 0 auto;
+	position: absolute;
+	left: 0;
+	top: 0;
 	width: 1100px;
 	height: 680px;
 }
@@ -77,17 +213,87 @@ a {
 }
 
 .say {
+	display: block;
 	margin-left: 5px;
-	font-size: large;
-	font-family:'viana';
+	font-size: 18px;
+	line-height: 1.3;
+	font-family: 'Lora', 'Georgia', serif;
+	font-style: italic;
+	font-weight: 500;
+}
 
-	@font-face {
-		font-family: 'viana';
-		src:url("Viana.ttf")；
-	}
+.say-cn {
+	display: block;
+	margin-left: 10px;
+	margin-top: 2px;
+	margin-bottom: 2px;
+	font-size: 16px;
+	line-height: 1.3;
+	color: #5a2020;
+	font-family: 'Long Cang', cursive;
+	font-weight: bold;
 }
 
 .space {
 	margin-right: 150px;
 
+}
+
+/* 音乐控制按钮 */
+#music-btn {
+	position: fixed;
+	bottom: 30px;
+	right: 30px;
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background: rgba(255, 105, 135, 0.85);
+	color: #fff;
+	font-size: 24px;
+	line-height: 50px;
+	text-align: center;
+	cursor: pointer;
+	z-index: 9999;
+	box-shadow: 0 2px 10px rgba(255, 105, 135, 0.4);
+	transition: transform 0.3s, background 0.3s;
+	user-select: none;
+}
+
+#music-btn:hover {
+	transform: scale(1.1);
+	background: rgba(255, 105, 135, 1);
+}
+
+#music-btn.playing {
+	animation: music-spin 3s linear infinite;
+}
+
+#music-btn.paused {
+	animation: none;
+	background: rgba(180, 180, 180, 0.7);
+}
+
+@keyframes music-spin {
+	from { transform: rotate(0deg); }
+	to { transform: rotate(360deg); }
+}
+
+/* 鼠标拖尾爱心 */
+.heart-trail {
+	position: fixed;
+	pointer-events: none;
+	z-index: 9998;
+	font-size: 16px;
+	animation: heart-float 1.2s ease-out forwards;
+}
+
+@keyframes heart-float {
+	0% {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+	100% {
+		opacity: 0;
+		transform: translateY(-80px) scale(0.3);
+	}
 }

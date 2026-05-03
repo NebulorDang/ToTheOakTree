@@ -20,6 +20,7 @@ $(window).resize(function() {
 		this.each(function() {
 			var $ele = $(this), str = $ele.html(), progress = 0;
 			$ele.html('');
+			var $parent = $ele.closest('#text');
 			var timer = setInterval(function() {
 				var current = str.substr(progress, 1);
 				if (current == '<') {
@@ -27,11 +28,12 @@ $(window).resize(function() {
 				} else {
 					progress++;
 				}
-				$ele.html(str.substring(0, progress) + (progress & 1 ? '_' : ''));
+				$ele.html(str.substring(0, progress));
+				$parent.stop().animate({ scrollTop: $parent[0].scrollHeight }, 120);
 				if (progress >= str.length) {
 					clearInterval(timer);
 				}
-			}, 75);
+			}, 45);
 		});
 		return this;
 	};
